@@ -5,7 +5,7 @@ def create_word_list() -> list[str]:
     censored_words = []  # Words in this list will be removed from the valid entry of words
 
     with open('words_alpha.txt', 'r') as words_file:                                # Open the text file
-        word_list = [word.strip() for word in words_file if len(word.strip()) > 3]  # Svae words longer than 3 letters
+        word_list = [word.strip() for word in words_file if len(word.strip()) > 3]  # Save words longer than 3 letters
         word_list = [word for word in word_list if word not in censored_words]      # Remove any censored words
 
         return word_list
@@ -21,6 +21,12 @@ def score(word: str) -> int:
             return len(word)               # Otherwise it's worth its own length
 
     return 0  # No points if the word is invalid
+
+
+def generate_letters() -> list[str]:  # TODO: algorithim to generate letters for a game
+    # Return static letters for testing
+    # Return letters used on Feb 8th, 2025's puzzle by Sam Ezersky
+    return ['l', 'h', 'n', 'r', 'a', 'c', 'i']
 
 
 VALID_WORDS = (create_word_list())
