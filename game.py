@@ -11,22 +11,47 @@ def create_word_list() -> list[str]:
         return word_list
 
 
-def score(word: str) -> int:
-    if word in VALID_WORDS:                # If the word is valid
-        if len(word) == 4:                 # If it's four letters long
-            return 1                       # It's worth one point
-        else:                              # Otherwise if it's longer:
-            if len(list(set(word))) == 7:  # If it has seven unique letters it must have used all seven letters
-                return len(word) + 7       # So it is worth seven extra points
-            return len(word)               # Otherwise it's worth its own length
-
-    return 0  # No points if the word is invalid
-
-
-def generate_letters() -> list[str]:  # TODO: algorithim to generate letters for a game
-    # Return static letters for testing
-    # Return letters used on Feb 8th, 2025's puzzle by Sam Ezersky
-    return ['l', 'h', 'n', 'r', 'a', 'c', 'i']
-
-
 VALID_WORDS = (create_word_list())
+
+
+class Word:
+    def __init__(self):
+        self.word = ''
+        self.letters = []
+        self.used_words = []
+
+    def __add__(self, other: str):
+        if other in self.letters:  # If the letter is in the current set
+            self.word += other     # Add it to the word
+        return self
+
+    def __sub__(self, other):
+        self.word = self.word[:-1]  # Set the word to one character shorter than what it is
+        return self
+
+    def __str__(self):
+        return self.word
+
+    def score(self) -> int:
+        score = 0
+        if (self.word in VALID_WORDS                  # If the word is actually a word,
+                and self.word not in self.used_words  # Hasn't been used,
+                and self.letters[0] in self.word):    # And contains the center letter:
+            self.used_words.append(self.word)         # Note the word
+            if len(self.word) == 4:                   # If it's four letters long
+                score = 1                             # It's worth one point
+            else:                                     # Otherwise if it's longer:
+                score = len(self.word)                # It's worth its own length
+                if len(list(set(self.word))) == 7:    # And if it has seven unique letters it's used all seven letters
+                    score += 7                        # So it's worth seven extra points
+
+        self.word = ''  # Clear the word
+        return score    # And return the score
+
+    def generate_letters(self) -> list[str]:
+        # Return static letters for testing. TODO: algorithim to generate letters for a game
+        # Return letters used on Feb 8th, 2025's puzzle by Sam Ezersky
+        letters = ['l', 'h', 'n', 'r', 'a', 'c', 'i']
+
+        self.letters = letters
+        return letters
