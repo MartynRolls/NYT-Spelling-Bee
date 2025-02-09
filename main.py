@@ -50,6 +50,7 @@ while True:
     screen.fill((255, 255, 255))   # Clear the screen
     for _, tile in tiles.items():  # Draw all letter tiles
         screen.blit(tile.draw(window_size), (0, 0))
+    screen.blit(graphics.write_word(window_size, word.word), (0, 0))  # Write the word
 
     print(score, word)  # Print the word and score for debug
 
