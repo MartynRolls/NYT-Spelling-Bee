@@ -12,6 +12,21 @@ start_positions += [(round(hexagon_distance * sin(radians(60 * i)), 2),
                     for i in range(6)]
 
 
+def write_word(window_size: tuple[int, int], word: str) -> pygame.surface.Surface:
+    surface = pygame.Surface(window_size, pygame.SRCALPHA)  # Create an empty surface
+
+    scaler = min(window_size[0], window_size[1]) * 0.01  # Calculate how large it should be
+    x_offset, y_offset = window_size[0] * 0.5, window_size[1] * 0.2  # Calculate its position on the screen
+
+    font = pygame.font.Font('aptos-bold.ttf', int(6 * scaler))
+    text = font.render(word.upper(), True, (0, 0, 0))
+    rect = text.get_rect(center=(x_offset, y_offset))
+    dest = (round(rect.topleft[0]), round(rect.topleft[1]))
+    surface.blit(text, dest)
+
+    return surface
+
+
 class Tile:
     points = [(round(cos(radians(60 * i)), 2), round(sin(radians(60 * i)), 2))
               for i in range(6)]  # Six points of the hexagon
@@ -48,6 +63,11 @@ class Tile:
                 self.animation_step = 0
 
         # TODO: write letter on tile
+        font = pygame.font.Font('aptos-bold.ttf', int(6 * scaler))
+        text = font.render(self.letter.upper(), True, (0, 0, 0))
+        rect = text.get_rect(center=(self.x * scaler + x_offset, self.y * scaler + y_offset))
+        dest = (round(rect.topleft[0]), round(rect.topleft[1]))
+        surface.blit(text, dest)
 
         return surface
 
