@@ -1,6 +1,5 @@
 import pygame
-import game
-import graphics
+import spelling_bee
 
 # Initialising game
 pygame.init()
@@ -11,10 +10,10 @@ screen = pygame.display.set_mode(window_size, pygame.RESIZABLE)
 clock = pygame.time.Clock()
 pygame.display.set_caption('NYT Spelling Bee')
 
-word = game.Word()
-score = 0
+word = spelling_bee.Word()
+score = spelling_bee.Score()
 
-tiles: dict = graphics.create_tiles(word.generate_letters())
+tiles: dict = spelling_bee.create_tiles(word.generate_letters())
 for _, tile in tiles.items():
     tile.check((500, 500), (0, 0))
 
@@ -38,7 +37,7 @@ while True:
             for key, tile in tiles.items():
                 if event.key == getattr(pygame, f'K_{key}'):
                     word += key
-                    tile.animation_step = 1
+                    tile.animation_step = 16
 
         # For checking if a mouse button has been pressed
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -50,9 +49,9 @@ while True:
     screen.fill((255, 255, 255))   # Clear the screen
     for _, tile in tiles.items():  # Draw all letter tiles
         screen.blit(tile.draw(window_size), (0, 0))
-    screen.blit(graphics.write_word(window_size, word.word), (0, 0))  # Write the word
-
-    print(score, word)  # Print the word and score for debug
+    screen.blit(word.draw(window_size), (0, 0))  # Write the word
+    screen.blit(score.draw(window_size), (0, 0))  # Write the score
 
     pygame.display.flip()
     clock.tick(60)
+    pygame.display.set_caption(f'NYT Spelling Bee {clock.get_fps()}')
